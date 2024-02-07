@@ -2,6 +2,8 @@ name: deploy
 
 on: 
   push:
+    branches:
+      - develop
 
 jobs: 
   deploy:    
@@ -36,4 +38,5 @@ jobs:
         - name: build and push docker image
           uses: docker/build-push-action@v2
           with:
-            tags: ozmartins/dotnet-ci:latest
+            push: true
+            tags: ozmartins/dotnet-ci:develop
