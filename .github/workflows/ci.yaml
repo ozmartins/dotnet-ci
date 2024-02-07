@@ -1,0 +1,22 @@
+name: deploy
+
+on: 
+  push:
+
+jobs: 
+  deploy:    
+    runs-on: ubuntu-latest
+    steps:
+        - name: checkout
+          uses: actions/checkout@v2
+
+        - name: setup .NET environment
+          uses: actions/setup-dotnet@v3
+          with: 
+            dotnet-version: '6.0'
+          
+        - name: build
+          run: dotnet build Example-CI.sln
+          
+        - name: test
+          run: dotnet test ./test/Domain.Test/Domain.Test.csproj
