@@ -6,7 +6,7 @@ namespace Domain.Interfaces.Filters
     {
         public Expression<Func<TEntity, object>> Field { get; }
         public object Value { get; }
-        public FilterOperatorEnum Operator { get; }
+        public FilterOperator Operator { get; }
 
         public string GetFieldName(Expression<Func<TEntity, object>> field);
     }

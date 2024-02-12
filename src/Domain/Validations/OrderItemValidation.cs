@@ -25,7 +25,7 @@ namespace Domain.Validations
             RuleFor(o => o.Total).Equal(o => o.CalculateTotal()).WithMessage("O total do item é inválido.");
         }
 
-        private bool isUnitAllowedForItem(IRepository<Item> itemRepository, Guid itemId, MeasurementUnit unit)
+        private static bool isUnitAllowedForItem(IRepository<Item> itemRepository, Guid itemId, MeasurementUnit unit)
         {
             return itemRepository.RecoverById(itemId).Unit == unit;
         }

@@ -15,9 +15,9 @@ namespace Api.Controllers.Orders
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
-        private IOrderMapper _orderMapper;
+        private readonly IOrderMapper _orderMapper;
 
-        private IOrderService _orderService;
+        private readonly IOrderService _orderService;
 
         public OrderController(IOrderMapper orderMapper, IOrderService orderService)
         {

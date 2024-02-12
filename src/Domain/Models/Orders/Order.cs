@@ -1,17 +1,16 @@
-﻿using Domain.Models.Addresses;
+﻿using Domain.Infra;
+using Domain.Models.Addresses;
 
 namespace Domain.Models.Orders
 {
     public class Order : Entity
     {
         public Order() : base() { }
-        public Order(PersonForOrder supplier, PersonForOrder customer, Address? shippingAddress, decimal freight, PaymentPlanForOrder? paymentPlan, string notes, DateTime partyDate, List<OrderItem> items)
+        public Order(PersonForOrder supplier, PersonForOrder customer, decimal freight, string notes, DateTime partyDate, List<OrderItem> items)
         {
             Supplier = supplier;
             Customer = customer;
-            ShippingAddress = shippingAddress;
             Freight = freight;
-            PaymentPlan = paymentPlan;
             Notes = notes;
             PartyDate = partyDate;
             Items = items;
@@ -30,9 +29,17 @@ namespace Domain.Models.Orders
         public DateTime PartyDate { get; private set; }
         public DateTime ExpirationDate { get; private set; }
         public List<OrderItem> Items { get; private set; } = new List<OrderItem>();
-        public DateTime CalculateExpirationDate(DateTime baseDateTime)
+        public static DateTime CalculateExpirationDate(DateTime baseDateTime)
         {
             return baseDateTime.AddDays(7);
+        }
+        public void DefineShippingAddress(Address shippingAddress)
+        {
+            ShippingAddress = shippingAddress;
+        }
+        public void DefinePaymentPlan(PaymentPlanForOrder paymentPlan)
+        {
+            PaymentPlan = paymentPlan;
         }
         public void SetDefaultValuesForNewOrder()
         {
@@ -89,7 +96,7 @@ namespace Domain.Models.Orders
             var currentOrderItem = Items.Find(x => x.Id == currentOrderItemId);
 
             if (currentOrderItem == null)
-                throw new Exception("Não foi possível localizar o item de pedido informado.");
+                throw new BusinessException("Não foi possível localizar o item de pedido informado.");
 
             var index = Items.IndexOf(currentOrderItem);
 
@@ -101,13 +108,7 @@ namespace Domain.Models.Orders
         }
         internal void RemoveItem(Guid orderItemId)
         {
-            var currentOrderItem = Items.Find(x => x.Id == orderItemId);
-
-            if (currentOrderItem == null)
-                throw new Exception("Não foi possível localizar o item de pedido informado");
-
-            var index = Items.IndexOf(currentOrderItem);
-
+            var currentOrderItem = Items.Find(x => x.Id == orderItemId) ?? throw new BusinessException("Não foi possível localizar o item de pedido informado");
             Items.Remove(currentOrderItem);
         }
     }

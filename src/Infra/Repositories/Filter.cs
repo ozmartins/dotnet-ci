@@ -6,7 +6,7 @@ namespace Infra.Repositories
 {
     public class Filter<TEntity> : IFilter<TEntity> where TEntity : IEntity
     {
-        public Filter(Expression<Func<TEntity, object>> field, FilterOperatorEnum @operator, object value)
+        public Filter(Expression<Func<TEntity, object>> field, FilterOperator @operator, object value)
         {
             Field = field;
             Operator = @operator;
@@ -14,7 +14,7 @@ namespace Infra.Repositories
         }
 
         public Expression<Func<TEntity, object>> Field { get; private set; }
-        public FilterOperatorEnum Operator { get; private set; }
+        public FilterOperator Operator { get; private set; }
 
         public object Value { get; private set; }
 

@@ -1,9 +1,11 @@
-﻿namespace Domain.Models.Items
+﻿using Domain.Infra;
+
+namespace Domain.Models.Items
 {
     public class Item : Entity
     {
         public Item() : base() { }
-        public Item(PersonForItem supplier, string sku, string name, string details, object photo, decimal price, MeasurementUnit unit, ProductOrService productOrService, Product productInfo, List<Schedule> schedules)
+        public Item(PersonForItem supplier, string sku, string name, string details, object photo, decimal price, MeasurementUnit unit)
         {
             Supplier = supplier;
             SKU = sku;
@@ -12,9 +14,7 @@
             Photo = photo;
             Price = price;
             Unit = unit;
-            ProductOrService = productOrService;
-            ProductInfo = productInfo;
-            Schedules = schedules;
+            Schedules = new List<Schedule>();
         }
         public PersonForItem Supplier { get; private set; } = new PersonForItem();
         public string SKU { get; private set; } = string.Empty;
@@ -26,12 +26,24 @@
         public ProductOrService ProductOrService { get; private set; }
         public Product ProductInfo { get; private set; } = new Product();
         public List<Schedule> Schedules { get; private set; } = new List<Schedule>();
+        public void DefineIfIsProductOrService(ProductOrService productOrService, Product productInfo)
+        {
+            ProductOrService = productOrService;
+            if (productOrService == ProductOrService.Product)
+                ProductInfo = productInfo;
+        }
+        public void AddSchedule(Guid scheduleId, Schedule newSchedule)
+        {
+            newSchedule.DefineIdAndVersion(scheduleId, Guid.NewGuid());
+
+            Schedules.Add(newSchedule);
+        }
         public void ReplaceSchedule(Guid scheduleId, Schedule newSchedule)
         {
             var currentSchedule = Schedules.Find(x => x.Id == scheduleId);
 
             if (currentSchedule == null)
-                throw new Exception("Não foi possível localizar a agenda informada");
+                throw new BusinessException("Não foi possível localizar a agenda informada");
 
             var index = Schedules.IndexOf(currentSchedule);
 
@@ -45,12 +57,10 @@
         {
             var currentSchedule = Schedules.Find(x => x.Id == scheduleId);
 
-            if (currentSchedule == null)
-                throw new Exception("Não foi possível localizar a agenda informada");
-
-            var index = Schedules.IndexOf(currentSchedule);
-
-            Schedules.Remove(currentSchedule);
+            if (currentSchedule != null)
+                Schedules.Remove(currentSchedule);
+            else
+                throw new BusinessException("Não foi possível localizar a agenda informada");
         }
     }
 }

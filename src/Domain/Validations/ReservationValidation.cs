@@ -26,26 +26,26 @@ namespace Domain.Validations
 
             RuleFor(x => orderWasInformed(x)).Equal(true).WithMessage("O pedido não foi informado.");
 
-            RuleFor(x => itemHasAnOpenSchedule(x)).Equal(true).WithMessage("O item não possui agenda aberta para a data solicitada.");
+            RuleFor(x => ItemHasAnOpenSchedule(x)).Equal(true).WithMessage("O item não possui agenda aberta para a data solicitada.");
 
-            RuleFor(x => itemHasAvailableHours(reservationRepository, reservationFilterBuilder, x)).Equal(true).WithMessage("O item não possui disponibilidade nos horários solicitados.");
+            RuleFor(x => ItemHasAvailableHours(reservationRepository, reservationFilterBuilder, x)).Equal(true).WithMessage("O item não possui disponibilidade nos horários solicitados.");
         }
 
-        private bool orderWasInformed(Reservation reservation)
+        private static bool orderWasInformed(Reservation reservation)
         {
             if (reservation.ReservationReason == ReservationReason.Order && reservation.OrderItem == null)
                 return false;
             else
                 return true;
         }
-        private bool itemHasAnOpenSchedule(Reservation reservation)
+        private static bool ItemHasAnOpenSchedule(Reservation reservation)
         {
-            return reservation.Item.Schedules.Where(x => x.DayOfWeek == reservation.Date.DayOfWeek).Count() > 0;
+            return reservation.Item.Schedules.Exists(x => x.DayOfWeek == reservation.Date.DayOfWeek);
         }
 
-        private bool itemHasAvailableHours(IRepository<Reservation> reservationRepository, IFilterBuilder<Reservation> reservationFilterBuilder, Reservation reservation)
+        private static bool ItemHasAvailableHours(IRepository<Reservation> reservationRepository, IFilterBuilder<Reservation> reservationFilterBuilder, Reservation reservation)
         {
-            var schedule = reservation.Item.Schedules.Where(x => x.DayOfWeek == reservation.Date.DayOfWeek).FirstOrDefault();
+            var schedule = reservation.Item.Schedules.Find(x => x.DayOfWeek == reservation.Date.DayOfWeek);
 
             if (schedule == null) return false;
 
@@ -68,7 +68,7 @@ namespace Domain.Validations
             return true;
         }
 
-        private List<int> buildWishedHoursList(Reservation reservation)
+        private static List<int> buildWishedHoursList(Reservation reservation)
         {
             var result = new List<int>();
 
@@ -80,7 +80,7 @@ namespace Domain.Validations
             return result;
         }
 
-        private List<int> buildAvailableHoursList(List<int> scheduleHoursList, List<Reservation> reservations)
+        private static List<int> buildAvailableHoursList(List<int> scheduleHoursList, List<Reservation> reservations)
         {
             foreach (var reservation in reservations)
             {
@@ -93,7 +93,7 @@ namespace Domain.Validations
             return scheduleHoursList;
         }
 
-        private List<int> transformScheduleItemsIntoHoursList(List<ScheduleItem> scheduleItems)
+        private static List<int> transformScheduleItemsIntoHoursList(List<ScheduleItem> scheduleItems)
         {
             var result = new List<int>();
 
@@ -108,7 +108,7 @@ namespace Domain.Validations
             return result;
         }
 
-        private List<Reservation> getReservedHours(IRepository<Reservation> reservationRepository, IFilterBuilder<Reservation> reservationFilterBuilder, Reservation reservation)
+        private static List<Reservation> getReservedHours(IRepository<Reservation> reservationRepository, IFilterBuilder<Reservation> reservationFilterBuilder, Reservation reservation)
         {
             reservationFilterBuilder
                 .Equal(x => x.Item, reservation.Item)

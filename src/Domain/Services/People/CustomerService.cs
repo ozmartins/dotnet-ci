@@ -1,7 +1,6 @@
 ﻿using Domain.Interfaces.Filters;
 using Domain.Interfaces.Services;
 using Domain.Interfaces.Validations;
-using Domain.Models.PaymentPlans;
 using Domain.Models.People;
 using Domain.Interfaces;
 
@@ -9,7 +8,19 @@ namespace Domain.Services.People
 {
     public class CustomerService : PersonService, ICustomerService
     {
-        public CustomerService(IRepository<Person> rep, IFilterBuilder<Person> personFilterBuilder, IPersonValidation personValidation, IPhoneValidation phoneValidation, IPersonPhoneValidation personPhoneValidation, IAddressValidation addressValidation, IPersonAddressValidation personAddressValidation, IRepository<PaymentPlan> paymentPlanRepository) : base(rep, personFilterBuilder, personValidation, phoneValidation, personPhoneValidation, addressValidation, personAddressValidation, paymentPlanRepository)
+        public CustomerService(IRepository<Person> repository,
+                               IFilterBuilder<Person> personFilterBuilder,
+                               IPersonValidation personValidation,
+                               IPersonPhoneService personPhoneService,
+                               IPersonAddressService personAddressService,
+                               IPersonPaymentPlanService personPaymentPlanService) :
+            base(
+                repository,
+                personFilterBuilder,
+                personValidation,
+                personPhoneService,
+                personAddressService,
+                personPaymentPlanService)
         {
         }
 

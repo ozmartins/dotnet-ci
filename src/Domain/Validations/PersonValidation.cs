@@ -10,15 +10,11 @@ namespace Domain.Validations
 {
     public class PersonValidation : AbstractValidator<Person>, IPersonValidation
     {
-        private IPhoneValidation _phoneValidation;
-
-        private IPersonPhoneValidation _personPhoneValidation;
-
-        private IAddressValidation _addressValidation;
-
-        private IPersonAddressValidation _personAddressValidation;
-
-        private IPaymentPlanValidation _paymentPlanValidation;
+        private readonly IPhoneValidation _phoneValidation;
+        private readonly IPersonPhoneValidation _personPhoneValidation;
+        private readonly IAddressValidation _addressValidation;
+        private readonly IPersonAddressValidation _personAddressValidation;
+        private readonly IPaymentPlanValidation _paymentPlanValidation;
 
         public PersonValidation(IRepository<Person> personRepository,
                                 IRepository<PaymentPlan> paymentPlanRepository,
@@ -30,30 +26,26 @@ namespace Domain.Validations
                                 IPaymentPlanValidation paymentPlanValidation)
         {
             _phoneValidation = phoneValidation;
-
             _personPhoneValidation = personPhoneValidation;
-
             _addressValidation = addressValidation;
-
             _personAddressValidation = personAddressValidation;
-
             _paymentPlanValidation = paymentPlanValidation;
 
             RuleFor(p => p.Name).NotEmpty().WithMessage("O nome da pessoa não foi informado.");
 
             RuleFor(p => p.SupplierOrCustomer).IsInEnum().WithMessage("O campo 'Cliente ou Fornecedor' está com um valor inválido.");
 
-            RuleFor(p => p.Document).Length(x => isCPF(x.Document) ? 11 : isCNPJ(x.Document) ? 14 : 0).WithMessage("O CPF/CNPJ precisa ter 11 ou 14 dígitos.");
+            RuleFor(p => p.Document).Must(x => (isCPF(x) && x.Length.Equals(11)) || isCNPJ(x) && x.Length.Equals(14)).WithMessage("O CPF/CNPJ precisa ter 11 ou 14 dígitos.");
 
             RuleFor(p => p.Document).Must(x => x.All(char.IsDigit)).WithMessage("O número do documento deve conter apenas números");
 
             RuleFor(p => documentAlreadyExists(personRepository, personFilterBuilder, p)).Equal(false).WithMessage("Já existe uma pessoa cadastrada com o documento informado.");
 
-            RuleFor(p => documentIsValid(p.Document)).Equal(true).WithMessage("O documento informado é inválido.");
+            RuleFor(p => DocumentIsValid(p.Document)).Equal(true).WithMessage("O documento informado é inválido.");
 
             RuleFor(p => p.CustomerInfo.BirthDate).LessThan(DateTime.Today).WithMessage("A data de nascimento não pode ser maior que a data atual.");
 
-            RuleFor(p => businessDescriptionIsEmpty(p)).Equal(false).WithMessage("A descrição do negócio não foi informada.");
+            RuleFor(p => BusinessDescriptionIsEmpty(p)).Equal(false).WithMessage("A descrição do negócio não foi informada.");
 
             RuleForEach(p => p.SupplierInfo.PaymentPlans).ChildRules(pay => pay.RuleFor(x => paymentPlanRepository.RecoverById(x.Id)).NotNull().WithMessage("O plano de pagamento informado não existe."));
         }
@@ -94,19 +86,19 @@ namespace Domain.Validations
             return result;
         }
 
-        private bool isCPF(string document)
+        private static bool isCPF(string document)
         {
             return document.Length == 11;
         }
 
-        private bool isCNPJ(string document)
+        private static bool isCNPJ(string document)
         {
             return document.Length == 14;
         }
 
-        private bool documentAlreadyExists(IRepository<Person> personRepository, IFilterBuilder<Person> filterBuilder, Person person)
+        private static bool documentAlreadyExists(IRepository<Person> personRepository, IFilterBuilder<Person> filterBuilder, Person person)
         {
-            if (String.IsNullOrEmpty(person.Document)) return false;
+            if (string.IsNullOrEmpty(person.Document)) return false;
 
             filterBuilder
                 .Equal(x => x.Document, person.Document)
@@ -115,9 +107,9 @@ namespace Domain.Validations
             return personRepository.Recover(filterBuilder).Count > 0;
         }
 
-        private bool documentIsValid(string document)
+        private static bool DocumentIsValid(string document)
         {
-            if (String.IsNullOrEmpty(document)) return true;
+            if (string.IsNullOrEmpty(document)) return true;
 
             if (isCPF(document))
                 return IsCpfValid(document);
@@ -127,12 +119,9 @@ namespace Domain.Validations
                 return false;
         }
 
-        private bool businessDescriptionIsEmpty(Person person)
-        {
-            return person.SupplierOrCustomer == SupplierOrCustomer.Supplier && string.IsNullOrEmpty(person.SupplierInfo.BusinessDescription);
-        }
+        private static bool BusinessDescriptionIsEmpty(Person person) => person.SupplierOrCustomer == SupplierOrCustomer.Supplier && string.IsNullOrEmpty(person.SupplierInfo.BusinessDescription);
 
-        private bool IsCpfValid(string cpf)
+        private static bool IsCpfValid(string cpf)
         {
             int[] multiplier1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplier2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -168,7 +157,7 @@ namespace Domain.Validations
             return cpf.EndsWith(digit);
         }
 
-        private bool IsCnpjValid(string cnpj)
+        private static bool IsCnpjValid(string cnpj)
         {
             int[] multiplier1 = new int[12] { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplier2 = new int[13] { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };

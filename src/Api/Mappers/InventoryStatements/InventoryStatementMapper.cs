@@ -12,9 +12,9 @@ namespace Api.Mappers.InventoryStatements
 {
     public class InventoryStatementMapper : BaseMapper<InventoryStatement>, IInventoryStatementMapper
     {
-        private IRepository<Item> _itemRepository;
+        private readonly IRepository<Item> _itemRepository;
 
-        private IMapper _autoMapper;
+        private readonly IMapper _autoMapper;
 
         public InventoryStatementMapper(IRepository<Item> itemRepository, IMapper autoMapper)
         {
@@ -59,7 +59,7 @@ namespace Api.Mappers.InventoryStatements
             return result;
         }
 
-        private InventoryStatementView? MapToView(InventoryStatement? inventoryStatement)
+        private static InventoryStatementView? MapToView(InventoryStatement? inventoryStatement)
         {
             if (inventoryStatement == null) return null;
 

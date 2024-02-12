@@ -11,9 +11,9 @@ namespace Domain.Validations
 {
     public class OrderValidation : AbstractValidator<Order>, IOrderValidation
     {
-        private IOrderItemValidation _orderItemValidation;
+        private readonly IOrderItemValidation _orderItemValidation;
 
-        private IAddressValidation _addressValidation;
+        private readonly IAddressValidation _addressValidation;
 
         public OrderValidation(ICustomerService customerService,
                                ISupplierService supplierService,
@@ -65,7 +65,7 @@ namespace Domain.Validations
 
             RuleFor(x => x.PartyDate).GreaterThan(DateTime.Now).WithMessage("A data/hora da festa precisa ser maior que a data/hora atual.");
 
-            RuleFor(x => x.ExpirationDate).Equal(x => x.CalculateExpirationDate(x.DateTime)).WithMessage("A data/hora de expiração do pedido é inválida.");
+            RuleFor(x => x.ExpirationDate).Equal(x => Order.CalculateExpirationDate(x.DateTime)).WithMessage("A data/hora de expiração do pedido é inválida.");
 
             RuleFor(x => x.Items.Count).GreaterThan(0).WithMessage("O pedido precisa ter ao menos um item.");
 
@@ -92,7 +92,7 @@ namespace Domain.Validations
             return result;
         }
 
-        private bool isPaymentAttachedToSupplier(ISupplierService supplierService, Guid supplierId, Guid paymentPlanId)
+        private static bool isPaymentAttachedToSupplier(ISupplierService supplierService, Guid supplierId, Guid paymentPlanId)
         {
             return supplierService
                 .Get(supplierId)
@@ -101,14 +101,14 @@ namespace Domain.Validations
                 .Exists(x => x.Id == paymentPlanId);
         }
 
-        private bool itemsDuplicated(Order order)
+        private static bool itemsDuplicated(Order order)
         {
             var result = order.Items
                 .GroupBy(x => x.Item.Id)
                 .Where(g => g.Count() > 1)
                 .Select(x => x.Key);
 
-            return result.Count() > 0;
+            return result.Any();
         }
     }
 }

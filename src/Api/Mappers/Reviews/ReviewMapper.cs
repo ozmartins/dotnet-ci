@@ -13,7 +13,7 @@ namespace Api.Mappers.Reviews
 {
     public class ReviewMapper : BaseMapper<Review>, IReviewMapper
     {
-        private IRepository<Order> _orderRepository;
+        private readonly IRepository<Order> _orderRepository;
         private readonly IMapper _autoMapper;
         public ReviewMapper(IRepository<Order> orderRepository, IMapper autoMapper)
         {

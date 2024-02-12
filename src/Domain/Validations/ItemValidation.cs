@@ -10,9 +10,9 @@ namespace Domain.Validations
 {
     public class ItemValidation : AbstractValidator<Item>, IItemValidation
     {
-        private IScheduleValidation _scheduleValidation;
+        private readonly IScheduleValidation _scheduleValidation;
 
-        private IItemScheduleValidation _itemScheduleValidation;
+        private readonly IItemScheduleValidation _itemScheduleValidation;
 
         public ItemValidation(IRepository<Item> itemRepository, IFilterBuilder<Item> itemFilterBuilder, IRepository<Person> personRepository, IScheduleValidation scheduleValidation, IItemScheduleValidation itemScheduleValidation)
         {
@@ -65,7 +65,7 @@ namespace Domain.Validations
             return result;
         }
 
-        private bool skuAlreadyExists(IRepository<Item> itemRepository, IFilterBuilder<Item> filterBuilder, Item item)
+        private static bool skuAlreadyExists(IRepository<Item> itemRepository, IFilterBuilder<Item> filterBuilder, Item item)
         {
             filterBuilder
                 .Equal(x => x.SKU, item.SKU)

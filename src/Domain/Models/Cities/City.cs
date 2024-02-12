@@ -3,7 +3,7 @@
     public class City : Entity
     {
         public City() : base() { }
-        public City(int ibgeNumber, string name, UfEnum state)
+        public City(int ibgeNumber, string name, Uf state)
         {
             IbgeNumber = ibgeNumber;
             Name = name;
@@ -11,6 +11,6 @@
         }
         public int IbgeNumber { get; private set; }
         public string Name { get; private set; } = string.Empty;
-        public UfEnum State { get; private set; }
+        public Uf State { get; private set; }
     }
 }

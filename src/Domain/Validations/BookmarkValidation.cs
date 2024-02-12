@@ -23,7 +23,7 @@ namespace Domain.Validations
             RuleFor(p => bookmarkAlreadyExists(bookmarkRepository, filterBuilder, p)).Equal(false).WithMessage("Já existe um bookmark com mesmo cliente e item.");
         }
 
-        private bool bookmarkAlreadyExists(IRepository<Bookmark> bookmarkRepository, IFilterBuilder<Bookmark> filterBuilder, Bookmark boomark)
+        private static bool bookmarkAlreadyExists(IRepository<Bookmark> bookmarkRepository, IFilterBuilder<Bookmark> filterBuilder, Bookmark boomark)
         {
             filterBuilder
                 .Equal(x => x.Item, boomark.Item)

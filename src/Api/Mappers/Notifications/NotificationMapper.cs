@@ -11,7 +11,7 @@ namespace Api.Mappers.Notifications
 {
     public class NotificationMapper : BaseMapper<Notification>, INotificationMapper
     {
-        private IRepository<Person> _personRepository;
+        private readonly IRepository<Person> _personRepository;
 
         public NotificationMapper(IRepository<Person> personRepository)
         {

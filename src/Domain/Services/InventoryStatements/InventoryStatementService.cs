@@ -9,13 +9,13 @@ namespace Domain.Services.InventoryStatements
 {
     public class InventoryStatementService : IInventoryStatementService
     {
-        private BasicService<InventoryStatement> _basicService;
+        private readonly BasicService<InventoryStatement> _basicService;
 
-        private IItemService _itemService;
+        private readonly IItemService _itemService;
 
-        private IRepository<InventoryStatement> _repository;
+        private readonly IRepository<InventoryStatement> _repository;
 
-        private IInventoryStatementValidation _inventoryStatementValidation;
+        private readonly IInventoryStatementValidation _inventoryStatementValidation;
 
         public InventoryStatementService(IRepository<InventoryStatement> repository, IInventoryStatementValidation inventoryStatementValidation, IItemService itemService)
         {

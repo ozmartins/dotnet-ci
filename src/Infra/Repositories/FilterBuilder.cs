@@ -6,7 +6,7 @@ namespace Infra.Repositories
 {
     public class FilterBuilder<TEntity> : IFilterBuilder<TEntity> where TEntity : IEntity
     {
-        private List<IFilter<TEntity>> _filters;
+        private readonly List<IFilter<TEntity>> _filters;
 
         public FilterBuilder()
         {
@@ -20,28 +20,28 @@ namespace Infra.Repositories
 
         public IFilterBuilder<TEntity> Equal(Expression<Func<TEntity, object>> field, object value)
         {
-            _filters.Add(new Filter<TEntity>(field, FilterOperatorEnum.Equal, value));
+            _filters.Add(new Filter<TEntity>(field, FilterOperator.Equal, value));
 
             return this;
         }
 
         public IFilterBuilder<TEntity> Unequal(Expression<Func<TEntity, object>> field, object value)
         {
-            _filters.Add(new Filter<TEntity>(field, FilterOperatorEnum.Unequal, value));
+            _filters.Add(new Filter<TEntity>(field, FilterOperator.Unequal, value));
 
             return this;
         }
 
         public IFilterBuilder<TEntity> GreaterThan(Expression<Func<TEntity, object>> field, object value)
         {
-            _filters.Add(new Filter<TEntity>(field, FilterOperatorEnum.GreaterThan, value));
+            _filters.Add(new Filter<TEntity>(field, FilterOperator.GreaterThan, value));
 
             return this;
         }
 
         public IFilterBuilder<TEntity> LessThan(Expression<Func<TEntity, object>> field, object value)
         {
-            _filters.Add(new Filter<TEntity>(field, FilterOperatorEnum.LessThan, value));
+            _filters.Add(new Filter<TEntity>(field, FilterOperator.LessThan, value));
 
             return this;
         }

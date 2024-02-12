@@ -23,7 +23,7 @@ namespace Domain.Validations
             RuleFor(p => (int)p.State).Equal(x => extractStateIdFromIbgeNumber(x.IbgeNumber)).WithMessage("O código IBGE informado não pertece ao estado informado.");
         }
 
-        private bool ibgeNumberAlreadyExists(IRepository<City> cityRepository, IFilterBuilder<City> filterBuilder, City city)
+        private static bool ibgeNumberAlreadyExists(IRepository<City> cityRepository, IFilterBuilder<City> filterBuilder, City city)
         {
             filterBuilder
                 .Equal(x => x.IbgeNumber, city.IbgeNumber)
@@ -32,7 +32,7 @@ namespace Domain.Validations
             return cityRepository.Recover(filterBuilder).Count > 0;
         }
 
-        private int extractStateIdFromIbgeNumber(int ibgeNumber)
+        private static int extractStateIdFromIbgeNumber(int ibgeNumber)
         {
             var stateId = ibgeNumber / 100000; //IBGE number always has seven digits, so dividing for 100k, will return the two first digits.
 

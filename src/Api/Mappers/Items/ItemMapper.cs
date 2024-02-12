@@ -12,9 +12,9 @@ namespace Api.Mappers.Items
 {
     public class ItemMapper : BaseMapper<Item>, IItemMapper
     {
-        private IMapper _autoMapper;
+        private readonly IMapper _autoMapper;
 
-        private IRepository<Person> _personRepository;
+        private readonly IRepository<Person> _personRepository;
 
         public ItemMapper(IMapper autoMapper, IRepository<Person> personRepository)
         {
@@ -36,11 +36,10 @@ namespace Api.Mappers.Items
                 dto.Details,
                 dto.Photo,
                 dto.Price,
-                dto.Unit,
-                dto.ProductOrService,
-                new Product(dto.AvailableQuantity, dto.ForRentOrSale),
-                new List<Schedule>()
+                dto.Unit
             );
+
+            item.DefineIfIsProductOrService(dto.ProductOrService, new Product(dto.AvailableQuantity, dto.ForRentOrSale));
 
             SetEntity(item);
 
@@ -66,7 +65,7 @@ namespace Api.Mappers.Items
             return result;
         }
 
-        private ItemView? MapToView(Item? item)
+        private static ItemView? MapToView(Item? item)
         {
             if (item == null) return null;
 

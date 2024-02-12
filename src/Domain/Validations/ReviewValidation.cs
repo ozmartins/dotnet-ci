@@ -18,11 +18,10 @@ namespace Domain.Validations
 
         }
 
-        private bool reviewAlreadyExistsForOrderItem(IRepository<Review> reviewRepository, IFilterBuilder<Review> reviewFilterBuilder, Review review)
+        private static bool reviewAlreadyExistsForOrderItem(IRepository<Review> reviewRepository, IFilterBuilder<Review> reviewFilterBuilder, Review review)
         {
             reviewFilterBuilder.Equal(x => x.OrderItem, review.OrderItem)
                                .Unequal(x => x.Id, review.Id);
-            var teste = reviewRepository.Recover(reviewFilterBuilder);
 
             return reviewRepository.Recover(reviewFilterBuilder).Count > 0;
         }

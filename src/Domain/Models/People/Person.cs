@@ -1,4 +1,5 @@
-﻿using Domain.Models.Addresses;
+﻿using Domain.Infra;
+using Domain.Models.Addresses;
 
 namespace Domain.Models.People
 {
@@ -28,7 +29,7 @@ namespace Domain.Models.People
             var currentPhone = Phones.Find(x => x.Id == phoneId);
 
             if (currentPhone == null)
-                throw new Exception("Não foi possível localizar o telefone informado");
+                throw new BusinessException("Não foi possível localizar o telefone informado");
 
             var index = Phones.IndexOf(currentPhone);
 
@@ -38,13 +39,7 @@ namespace Domain.Models.People
         }
         public void RemovePhone(Guid phoneId)
         {
-            var currentPhone = Phones.Find(x => x.Id == phoneId);
-
-            if (currentPhone == null)
-                throw new Exception("Não foi possível localizar o telefone informado");
-
-            var index = Phones.IndexOf(currentPhone);
-
+            var currentPhone = Phones.Find(x => x.Id == phoneId) ?? throw new BusinessException("Não foi possível localizar o telefone informado");
             Phones.Remove(currentPhone);
         }
         public void ReplaceAddress(Guid addressId, Address newAddress)
@@ -52,7 +47,7 @@ namespace Domain.Models.People
             var currentAddress = Addresses.Find(x => x.Id == addressId);
 
             if (currentAddress == null)
-                throw new Exception("Não foi possível localizar o endereço informado");
+                throw new BusinessException("Não foi possível localizar o endereço informado");
 
             var index = Addresses.IndexOf(currentAddress);
 
@@ -62,24 +57,12 @@ namespace Domain.Models.People
         }
         public void RemoveAddress(Guid addressId)
         {
-            var currentAddress = Addresses.Find(x => x.Id == addressId);
-
-            if (currentAddress == null)
-                throw new Exception("Não foi possível localizar o endereço informado");
-
-            var index = Addresses.IndexOf(currentAddress);
-
+            var currentAddress = Addresses.Find(x => x.Id == addressId) ?? throw new BusinessException("Não foi possível localizar o endereço informado");
             Addresses.Remove(currentAddress);
         }
         public void RemovePaymentPlan(Guid paymentPlanId)
         {
-            var currentPaymentPlan = SupplierInfo.PaymentPlans.Find(x => x.Id == paymentPlanId);
-
-            if (currentPaymentPlan == null)
-                throw new Exception("Não foi possível localizar o plano de pagamento informado");
-
-            var index = SupplierInfo.PaymentPlans.IndexOf(currentPaymentPlan);
-
+            var currentPaymentPlan = SupplierInfo.PaymentPlans.Find(x => x.Id == paymentPlanId) ?? throw new BusinessException("Não foi possível localizar o plano de pagamento informado");
             SupplierInfo.PaymentPlans.Remove(currentPaymentPlan);
         }
     }

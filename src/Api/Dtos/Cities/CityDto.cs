@@ -6,6 +6,6 @@ namespace Api.Dtos.Cities
     {
         public int IbgeNumber { get; set; }
         public string Name { get; set; } = string.Empty;
-        public UfEnum State { get; set; }
+        public Uf State { get; set; }
     }
 }

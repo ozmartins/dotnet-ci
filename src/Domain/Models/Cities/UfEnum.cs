@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models.Cities
 {
-    public enum UfEnum
+    public enum Uf
     {
         AC = 12,
         AL = 27,

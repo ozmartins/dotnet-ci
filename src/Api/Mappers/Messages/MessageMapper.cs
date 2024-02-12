@@ -9,7 +9,7 @@ namespace Api.Infra.Messages
 {
     public class MessageMapper : BaseMapper<Message>, IMessageMapper
     {
-        private IRepository<Person> _personRepository;
+        private readonly IRepository<Person> _personRepository;
 
         public MessageMapper(IRepository<Person> personRepository)
         {

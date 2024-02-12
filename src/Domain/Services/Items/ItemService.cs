@@ -8,13 +8,13 @@ namespace Domain.Services.Items
 {
     public class ItemService : IItemService
     {
-        private BasicService<Item> _basicService;
+        private readonly BasicService<Item> _basicService;
 
-        private IRepository<Item> _repository;
+        private readonly IRepository<Item> _repository;
 
-        private IScheduleValidation _scheduleValidation;
+        private readonly IScheduleValidation _scheduleValidation;
 
-        private IItemScheduleValidation _itemScheduleValidation;
+        private readonly IItemScheduleValidation _itemScheduleValidation;
 
         public ItemService(IRepository<Item> repository, IItemValidation itemValidation, IScheduleValidation scheduleValidation, IItemScheduleValidation itemScheduleValidation)
         {

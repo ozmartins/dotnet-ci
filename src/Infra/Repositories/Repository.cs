@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Infra;
+using Domain.Interfaces;
 using Domain.Interfaces.Filters;
 using MongoDB.Driver;
 
@@ -9,7 +10,7 @@ namespace Infra.Repositories
         private IMongoCollection<TEntity> _collection { get; set; }
         private IMongoDatabase _database { get; set; }
 
-        private FilterDefinition<TEntity> translateToFilterDefinition(List<IFilter<TEntity>> filters)
+        private static FilterDefinition<TEntity> translateToFilterDefinition(List<IFilter<TEntity>> filters)
         {
             var mongoBuilder = Builders<TEntity>.Filter;
 
@@ -19,16 +20,16 @@ namespace Infra.Repositories
             {
                 switch (item.Operator)
                 {
-                    case FilterOperatorEnum.Equal:
+                    case FilterOperator.Equal:
                         filterDefinition &= mongoBuilder.Eq(item.GetFieldName(item.Field), item.Value);
                         break;
-                    case FilterOperatorEnum.Unequal:
+                    case FilterOperator.Unequal:
                         filterDefinition &= mongoBuilder.Not(mongoBuilder.Eq(item.GetFieldName(item.Field), item.Value));
                         break;
-                    case FilterOperatorEnum.GreaterThan:
+                    case FilterOperator.GreaterThan:
                         filterDefinition &= mongoBuilder.Gt(item.GetFieldName(item.Field), item.Value);
                         break;
-                    case FilterOperatorEnum.LessThan:
+                    case FilterOperator.LessThan:
                         filterDefinition &= mongoBuilder.Lt(item.GetFieldName(item.Field), item.Value);
                         break;
                     default:
@@ -61,7 +62,7 @@ namespace Infra.Repositories
 
             if (RecoverById(id).Version != entity.Version)
             {
-                throw new Exception("O registro já foi alterado por outro usuário.");
+                throw new BusinessException("O registro já foi alterado por outro usuário.");
             }
 
             entity.DefineIdAndVersion(id, Guid.NewGuid());
@@ -82,7 +83,7 @@ namespace Infra.Repositories
         {
             var filters = filterBuilder.Build();
 
-            var filterDefinition = translateToFilterDefinition(filters);
+            var filterDefinition = Repository<TEntity>.translateToFilterDefinition(filters);
 
             filterDefinition &= Builders<TEntity>.Filter.Eq(x => x.Removed, false);
 

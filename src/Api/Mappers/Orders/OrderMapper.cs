@@ -16,17 +16,17 @@ namespace Api.Mappers.Orders
 {
     public class OrderMapper : BaseMapper<Order>, IOrderMapper
     {
-        private ISupplierService _supplierService;
+        private readonly ISupplierService _supplierService;
 
-        private ICustomerService _customerService;
+        private readonly ICustomerService _customerService;
 
-        private IRepository<PaymentPlan> _paymentPlanRepository;
+        private readonly IRepository<PaymentPlan> _paymentPlanRepository;
 
-        private IAddressMapper _addressMapper;
+        private readonly IAddressMapper _addressMapper;
 
-        private IOrderItemMapper _orderItemMapper;
+        private readonly IOrderItemMapper _orderItemMapper;
 
-        private IMapper _autoMapper;
+        private readonly IMapper _autoMapper;
 
         public OrderMapper(ISupplierService supplierService,
                            ICustomerService customerService,
@@ -57,16 +57,21 @@ namespace Api.Mappers.Orders
 
             if (!SuccessResult()) return GetResult();
 
-            SetEntity(new Order(
+            var order = new Order(
                 _autoMapper.Map<PersonForOrder>(supplier),
                 _autoMapper.Map<PersonForOrder>(customer),
-                shippingAddress,
                 dto.Freight,
-                paymentPlanForOrder,
                 dto.Notes,
                 dto.PartyDate,
-                items)
-            );
+                items);
+
+            if (shippingAddress != null)
+                order.DefineShippingAddress(shippingAddress);
+
+            if (paymentPlanForOrder != null)
+                order.DefinePaymentPlan(paymentPlanForOrder);
+
+            SetEntity(order);
 
             return GetResult();
         }
@@ -105,7 +110,7 @@ namespace Api.Mappers.Orders
             return orderViewList;
         }
 
-        private OrderView? MapToView(Order? order)
+        private static OrderView? MapToView(Order? order)
         {
             if (order == null) return null;
 

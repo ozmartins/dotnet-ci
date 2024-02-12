@@ -1,6 +1,6 @@
 ﻿namespace Domain.Interfaces.Services
 {
-    public interface ISupplierService : IPersonService
+    public interface ISupplierService : IPersonService, IPersonPhoneService, IPersonAddressService, IPersonPaymentPlanService
     {
     }
 }

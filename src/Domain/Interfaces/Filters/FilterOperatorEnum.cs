@@ -1,6 +1,6 @@
 ﻿namespace Domain.Interfaces.Filters
 {
-    public enum FilterOperatorEnum
+    public enum FilterOperator
     {
         Equal,
         Unequal,

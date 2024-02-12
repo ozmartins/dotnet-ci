@@ -15,11 +15,11 @@ namespace Api.Controllers.Orders
     [Route("order/{orderId}/item")]
     public class OrderItemController : Controller
     {
-        private IOrderMapper _orderMapper;
+        private readonly IOrderMapper _orderMapper;
 
-        private IOrderItemMapper _orderItemMapper;
+        private readonly IOrderItemMapper _orderItemMapper;
 
-        private IOrderService _orderService;
+        private readonly IOrderService _orderService;
 
         public OrderItemController(IOrderMapper orderMapper, IOrderItemMapper orderItemMapper, IOrderService orderService)
         {

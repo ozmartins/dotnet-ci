@@ -12,11 +12,11 @@ namespace Api.Infra.Bookmarks
 {
     public class BookmarkMapper : BaseMapper<Bookmark>, IBookmarkMapper
     {
-        private IRepository<Person> _personRepository;
+        private readonly IRepository<Person> _personRepository;
 
-        private IRepository<Item> _itemRepository;
+        private readonly IRepository<Item> _itemRepository;
 
-        private IMapper _autoMapper;
+        private readonly IMapper _autoMapper;
 
         public BookmarkMapper(IRepository<Person> personRepository, IRepository<Item> itemRepository, IMapper autoMapper)
         {
@@ -57,7 +57,7 @@ namespace Api.Infra.Bookmarks
             return bookmarks;
         }
 
-        public BookmarkView? MapToView(Bookmark? entity)
+        public static BookmarkView? MapToView(Bookmark? entity)
         {
             if (entity == null) return null;
 

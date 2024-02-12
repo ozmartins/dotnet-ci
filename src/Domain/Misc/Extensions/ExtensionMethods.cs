@@ -1,11 +1,13 @@
-﻿namespace Domain.Infra.Extensions
+﻿using System.Globalization;
+
+namespace Domain.Infra.Extensions
 {
     public static class ExtensionMethods
     {
         public static T? ExceptionIfNull<T>(this T obj, string msg) where T : class
         {
             if (obj == null)
-                throw new Exception(msg);
+                throw new BusinessException(msg);
             return obj;
         }
 
@@ -25,7 +27,7 @@
 
         public static DateTime EndOfDay(this DateTime @this)
         {
-            return new DateTime(@this.Year, @this.Month, @this.Day).AddDays(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
+            return new DateTime(@this.Year, @this.Month, @this.Day, 0, 0, 0, DateTimeKind.Local).AddDays(1).Subtract(new TimeSpan(0, 0, 0, 0, 1));
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Api.Mappers.Orders
 {
     public class OrderItemMapper : BaseMapper<OrderItem>, IOrderItemMapper
     {
-        private IRepository<Item> _itemRepository;
+        private readonly IRepository<Item> _itemRepository;
 
-        private IMapper _autoMapper;
+        private readonly IMapper _autoMapper;
 
         public OrderItemMapper(IRepository<Item> itemRepository, IMapper autoMapper)
         {
@@ -77,7 +77,7 @@ namespace Api.Mappers.Orders
             return result;
         }
 
-        private OrderItemView? MapToView(OrderItem? orderItem)
+        private static OrderItemView? MapToView(OrderItem? orderItem)
         {
             if (orderItem == null) return null;
 

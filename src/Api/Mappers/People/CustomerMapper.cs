@@ -28,7 +28,7 @@ namespace Api.Mappers.People
                 dto.Document,
                 SupplierOrCustomer.Customer,
                 new Customer(dto.BirthDate == DateTime.MinValue ? null : dto.BirthDate),
-                new Supplier(String.Empty, new List<PaymentPlan>())
+                new Supplier(string.Empty, new List<PaymentPlan>())
             );
 
             if (!SuccessResult())

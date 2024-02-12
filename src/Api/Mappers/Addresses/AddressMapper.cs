@@ -11,7 +11,7 @@ namespace Api.Mappers.Addresses
 {
     public class AddressMapper : BaseMapper<Address>, IAddressMapper
     {
-        private IRepository<City> _cityRepository;
+        private readonly IRepository<City> _cityRepository;
 
         public AddressMapper(IRepository<City> cityRepository)
         {

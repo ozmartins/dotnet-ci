@@ -9,7 +9,19 @@ namespace Domain.Services.People
 {
     public class SupplierService : PersonService, ISupplierService
     {
-        public SupplierService(IRepository<Person> rep, IFilterBuilder<Person> personFilterBuilder, IPersonValidation personValidation, IPhoneValidation phoneValidation, IPersonPhoneValidation personPhoneValidation, IAddressValidation addressValidation, IPersonAddressValidation personAddressValidation, IRepository<PaymentPlan> paymentPlanRepository) : base(rep, personFilterBuilder, personValidation, phoneValidation, personPhoneValidation, addressValidation, personAddressValidation, paymentPlanRepository)
+        public SupplierService(IRepository<Person> repository,
+                               IFilterBuilder<Person> personFilterBuilder,
+                               IPersonValidation personValidation,
+                               IPersonPhoneService personPhoneService,
+                               IPersonAddressService personAddressService,
+                               IPersonPaymentPlanService personPaymentPlanService) :
+            base(
+                repository,
+                personFilterBuilder,
+                personValidation,
+                personPhoneService,
+                personAddressService,
+                personPaymentPlanService)
         {
         }
 

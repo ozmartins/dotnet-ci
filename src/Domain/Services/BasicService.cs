@@ -6,9 +6,9 @@ namespace Domain.Services
 {
     public class BasicService<TEntity> where TEntity : IEntity
     {
-        private IRepository<TEntity> _repository;
+        private readonly IRepository<TEntity> _repository;
 
-        private IValidator<TEntity> _validation;
+        private readonly IValidator<TEntity> _validation;
 
         public BasicService(IRepository<TEntity> repository, IValidator<TEntity> validation)
         {

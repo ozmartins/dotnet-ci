@@ -54,7 +54,7 @@ namespace Api.Infra.Reservations
             return reservations;
         }
 
-        public ReservationView? MapToView(Reservation? entity)
+        public static ReservationView? MapToView(Reservation? entity)
         {
             if (entity == null) return null;
 

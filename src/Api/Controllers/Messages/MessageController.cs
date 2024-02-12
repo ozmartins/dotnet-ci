@@ -19,7 +19,7 @@ namespace Api.Controllers.Messages
     [Route("[controller]")]
     public class MessageController : ControllerBase
     {
-        private BasicService<Message> _serviceMessage;
+        private readonly BasicService<Message> _serviceMessage;
 
         private readonly IMapper _autoMapper;
 

@@ -19,14 +19,14 @@ namespace Domain.Validations
             RuleForEach(p => p.Instalments).ChildRules(instalment => instalment.RuleFor(x => x.Quantity).GreaterThanOrEqualTo(0).WithMessage("A quantidade informada na prestação não pode ser negativa."));
         }
 
-        private bool quantityDuplicated(PaymentPlan paymentPlan)
+        private static bool quantityDuplicated(PaymentPlan paymentPlan)
         {
             var result = paymentPlan.Instalments
                 .GroupBy(x => x.Quantity)
                 .Where(g => g.Count() > 1)
                 .Select(x => x.Key);
 
-            return result.Count() > 0;
+            return result.Any();
         }
     }
 }

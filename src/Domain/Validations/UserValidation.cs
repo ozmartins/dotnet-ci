@@ -24,7 +24,7 @@ namespace Domain.Validations
             RuleFor(p => userAlreadyExists(userRepository, filterBuilder, p)).Equal(false).WithMessage("Já existe um usuário cadastrado com o endereço de e-mail informado.");
         }
 
-        private bool userAlreadyExists(IRepository<User> userRepository, IFilterBuilder<User> filterBuilder, User user)
+        private static bool userAlreadyExists(IRepository<User> userRepository, IFilterBuilder<User> filterBuilder, User user)
         {
             filterBuilder
                 .Equal(x => x.EmailAddress, user.EmailAddress)
@@ -33,15 +33,15 @@ namespace Domain.Validations
             return userRepository.Recover(filterBuilder).Count > 0;
         }
 
-        private bool doesPasswordRespectPolicy(string password)
+        private static bool doesPasswordRespectPolicy(string password)
         {
-            return true;
+            return !string.IsNullOrEmpty(password);
         }
 
-        private bool isEmailValid(string emailAddress)
+        private static bool isEmailValid(string emailAddress)
         {
             string pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|" + @"([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)" + @"@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
-            var regex = new Regex(pattern, RegexOptions.IgnoreCase);
+            var regex = new Regex(pattern, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(5));
             return regex.IsMatch(emailAddress);
         }
     }

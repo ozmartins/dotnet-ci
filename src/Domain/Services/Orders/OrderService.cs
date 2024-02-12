@@ -8,13 +8,13 @@ namespace Domain.Services.Orders
 {
     public class OrderService : IOrderService
     {
-        private BasicService<Order> _basicService;
+        private readonly BasicService<Order> _basicService;
 
-        private IRepository<Order> _repository;
+        private readonly IRepository<Order> _repository;
 
-        private IOrderValidation _orderValidation;
+        private readonly IOrderValidation _orderValidation;
 
-        private IOrderItemValidation _orderItemValidation;
+        private readonly IOrderItemValidation _orderItemValidation;
 
         public OrderService(IRepository<Order> repository, IOrderValidation orderValidation, IOrderItemValidation orderItemValidation)
         {
@@ -40,20 +40,20 @@ namespace Domain.Services.Orders
             return ServiceResult<Order>.SuccessResult(order);
         }
 
-        public ServiceResult<Order> Update(Guid id, Order newOrder)
+        public ServiceResult<Order> Update(Guid id, Order order)
         {
             var currentOrder = Get(id);
 
             if (currentOrder == null)
                 return ServiceResult<Order>.FailureResult("Não foi possível localizar o pedido informado.");
 
-            currentOrder.CopyHeaderData(newOrder);
+            currentOrder.CopyHeaderData(order);
 
-            currentOrder.Items.RemoveAll(x => itemRemoved(x.Item.Id, currentOrder, newOrder));
+            currentOrder.Items.RemoveAll(x => itemRemoved(x.Item.Id, currentOrder, order));
 
-            currentOrder.Items.AddRange(itemsAdded(currentOrder, newOrder));
+            currentOrder.Items.AddRange(itemsAdded(currentOrder, order));
 
-            currentOrder.CopyItemsData(newOrder);
+            currentOrder.CopyItemsData(order);
 
             currentOrder.TotalizeOrder();
 
@@ -159,7 +159,7 @@ namespace Domain.Services.Orders
             return ServiceResult<Order>.SuccessResult(order);
         }
 
-        private List<OrderItem> itemsAdded(Order currentOrder, Order newOrder)
+        private static List<OrderItem> itemsAdded(Order currentOrder, Order newOrder)
         {
             var result = new List<OrderItem>();
 
@@ -173,7 +173,7 @@ namespace Domain.Services.Orders
 
             return result;
         }
-        private bool itemRemoved(Guid itemId, Order currentOrder, Order newOrder)
+        private static bool itemRemoved(Guid itemId, Order currentOrder, Order newOrder)
         {
             return currentOrder.Items.Exists(x => x.Item.Id == itemId) && !newOrder.Items.Exists(x => x.Item.Id == itemId);
         }

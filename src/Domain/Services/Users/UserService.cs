@@ -9,13 +9,13 @@ namespace Domain.Services.Users
 {
     public class UserService : IUserService
     {
-        private IUserValidation _userValidation;
+        private readonly IUserValidation _userValidation;
 
-        private IFilterBuilder<User> _filterBuilder;
+        private readonly IFilterBuilder<User> _filterBuilder;
 
-        private IRepository<User> _repository;
+        private readonly IRepository<User> _repository;
 
-        private BasicService<User> _basicService;
+        private readonly BasicService<User> _basicService;
 
         public UserService(IRepository<User> repository, IUserValidation userValidation, IFilterBuilder<User> filterBuilder)
         {
