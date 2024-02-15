@@ -30,7 +30,6 @@ namespace Api.Controllers.Customers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 500)]
         [SwaggerOperation(Summary = CustomerConstant.CreateSummary, Description = CustomerConstant.CreateDescription, Tags = new[] { CustomerConstant.Tag })]
-        //TODO: Esse método não seria público, pois um cliente deve ser adicionado internamente quando um usuário fosse criado.
         public IActionResult Create([FromBody] CustomerDto dto)
         {
             try
@@ -87,7 +86,6 @@ namespace Api.Controllers.Customers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 500)]
         [SwaggerOperation(Summary = CustomerConstant.DeleteSummary, Description = CustomerConstant.DeleteDescription, Tags = new[] { CustomerConstant.Tag })]
-        //TODO: Esse método não seria público, pois um cliente deveria ser removido internamente quando uma conta de usuário fosse removida.
         public IActionResult Delete([FromRoute] Guid id)
         {
             try
@@ -130,7 +128,6 @@ namespace Api.Controllers.Customers
         [ProducesResponseType(typeof(List<CustomerView>), 200)]
         [ProducesResponseType(typeof(string), 500)]
         [SwaggerOperation(Summary = CustomerConstant.GetAllSummary, Description = CustomerConstant.GetAllDescription, Tags = new[] { CustomerConstant.Tag })]
-        //TODO: Não consigo ver um cenário em que esse método deva ser usado.
         public IActionResult Get()
         {
             try
